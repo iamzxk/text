@@ -1,0 +1,23 @@
+pip install pandas
+pip install openpyxl
+import pandas as pd
+
+# 读取Excel文件
+input_file = 'input.xlsx'
+df = pd.read_excel(input_file)
+
+# 统计G列中对应日期出现的次数
+date_counts = df['G'].value_counts()
+
+# 将统计结果转换为新的数据框
+result_df = date_counts.reset_index()
+result_df.columns = ['Date', 'Count']
+
+# 将结果添加到原始数据表格的后面
+output_df = pd.concat([df, result_df], axis=1)
+
+# 将结果保存到Excel文件
+with pd.ExcelWriter(input_file, engine='openpyxl', mode='w') as writer:
+    output_df.to_excel(writer, index=False)
+
+print("处理完成！")
